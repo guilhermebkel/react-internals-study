@@ -1,8 +1,8 @@
-import Recast from "./lib/Recast"
+import Recast, { useState } from "./lib/Recast"
 
 /** @jsx Recast.createElement */
 const Counter = () => {
-	const [state, setState] = Recast.useState(1)
+	const [state, setState] = useState(1)
 
 	return (
 		<button onClick={() => setState(c => c + 1)}>
