@@ -1,7 +1,7 @@
 import Recast from "./lib/Recast"
 
 /** @jsx Recast.createElement */
-function Counter() {
+const Counter = () => {
 	const [state, setState] = Recast.useState(1)
 
 	return (
