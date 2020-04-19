@@ -31,7 +31,7 @@ class Recast {
 				alternate: Recast.currentRoot,
 			}
 
-			Recast.nextUnitOfWork = this.workInProgressRoot
+			Recast.nextUnitOfWork = Recast.workInProgressRoot
 
 			Recast.deletions = []
 		}
