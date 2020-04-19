@@ -228,7 +228,7 @@ class Recast {
 			Recast.commitRoot()
 		}
 
-		requestIdleCallback(Recast.workLoop)
+		window.requestIdleCallback(Recast.workLoop)
 	}
 
 	static render(element, container) {
@@ -298,6 +298,6 @@ class Recast {
 	}
 }
 
-requestIdleCallback(Recast.workLoop)
+window.requestIdleCallback(Recast.workLoop)
 
 export default Recast
