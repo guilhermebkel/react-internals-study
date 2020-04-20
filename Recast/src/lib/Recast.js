@@ -288,7 +288,8 @@ function render(element, container) {
 
 function createDOM(fiber) {
 	/**
-	 * Since the text elements are rendered other way by Virtual DOM.
+	 * Since the text elements are rendered other way by Virtual DOM, we make a simple statement
+	 * to handle this different rendering.
 	 */
 	const dom =
 		fiber.type === "TEXT_ELEMENT" ? document.createTextNode("") : document.createElement(fiber.type)
@@ -299,7 +300,9 @@ function createDOM(fiber) {
 }
 
 function updateDOM(dom, prevProps, nextProps) {
-	//Remove old or changed event listeners
+	/**
+	 * Remove old or changed event listeners
+	 */
 	Object.keys(prevProps)
 		.filter(isEvent)
 		.filter((key) => !(key in nextProps) || isNew(prevProps, nextProps)(key))
@@ -308,7 +311,9 @@ function updateDOM(dom, prevProps, nextProps) {
 			dom.removeEventListener(eventType, prevProps[name])
 		})
 
-	// Remove old properties
+	/**
+	 * Remove old properties
+	 */
 	Object.keys(prevProps)
 		.filter(isProperty)
 		.filter(isGone(prevProps, nextProps))
@@ -316,7 +321,9 @@ function updateDOM(dom, prevProps, nextProps) {
 			dom[name] = ""
 		})
 
-	// Set new or changed properties
+	/**
+	 * Set new or changed properties
+	 */
 	Object.keys(nextProps)
 		.filter(isProperty)
 		.filter(isNew(prevProps, nextProps))
@@ -324,7 +331,9 @@ function updateDOM(dom, prevProps, nextProps) {
 			dom[name] = nextProps[name]
 		})
 
-	// Add event listeners
+	/**
+	 * Add event listeners
+	 */
 	Object.keys(nextProps)
 		.filter(isEvent)
 		.filter(isNew(prevProps, nextProps))
@@ -334,6 +343,9 @@ function updateDOM(dom, prevProps, nextProps) {
 		})
 }
 
+/**
+ * Start the rendering queue once this package is called
+ */
 window.requestIdleCallback(workLoop)
 
 const Recast = {
