@@ -4,7 +4,7 @@
 ## 🌆 How React works
 In react we work with something called **Fiber Tree**.
 
-A **Fiber Tree** is a simple concept that revolves around the way react works internally treating all **DOM Elements** as a **Element Tree** in order to render all of them (we can call it a **Linked List** of **DOM Elements** as well).
+A **Fiber Tree** is a simple concept that revolves around the way react works internally treating all **DOM Elements** as an **Element Tree** in order to render all of them (we can call it a **Linked List** of **DOM Elements** as well).
 
 Below you can see a simple example (credits on [Extra](#extra-info)):
 
