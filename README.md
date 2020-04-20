@@ -6,52 +6,29 @@ In react we work with something called **Fiber Tree**.
 
 A **Fiber Tree** is a simple concept that revolves around the way react works internally treating all **DOM Elements** as a **Element Tree** in order to render all of them (we can call it a **Linked List** of **DOM Elements** as well).
 
-Below you can see a simple example:
-
-- **JSX**:
-
-```jsx
-<div id="root">
-	<div>
-		<h1>
-			<p>
-			</p>
-			<a>
-			</a>
-		</h1>
-		<h2>
-		</h2>
-	</div>
-</div>
-```
-
-- **Drawing** (credits on [Extra](#extra-info)):
+Below you can see a simple example (credits on [Extra](#extra-info)):
 
 1. Every element is a **fiber**. Besides, it can have a **sibling** or a **parent**.
-<div style="display: flex; justify-content: center;background-color: #333">
-	<img src="./assets/fiber1.png" style="background-color: #333">
-</div>
+
+<img src="./assets/fiber1.png">
 
 <br />
 
 2. Once we finish making work on a **fiber**, if it has a **child**, it will be the next work we'll get done. So, if we're making some work on the **div**, after we finish it we'll make some work on the **child** **h1**.
-<div style="display: flex; justify-content: center;background-color: #333">
-	<img src="./assets/fiber2.png" style="background-color: #333">
-</div>
+
+<img src="./assets/fiber2.png">
 
 <br />
 
 3. Once we finish the work and the current **fiber** has no **children**, we'll look to get some work done on the **sibling**. By the example, after making work on **p**, we'll get some work done on **a**.
-<div style="display: flex; justify-content: center;background-color: #333">
-	<img src="./assets/fiber3.png" style="background-color: #333">
-</div>
+
+<img src="./assets/fiber3.png">
 
 <br />
 
 4. After making the work on the **sibling**, we'll go up the its **parent**. If the **parent** does not have any **children** or some work to be done, we go the **uncle** (the **sibling** of the **parent**).
-<div style="display: flex; justify-content: center;background-color: #333">
-	<img src="./assets/fiber4.png" style="background-color: #333">
-</div>
+
+<img src="./assets/fiber4.png">
 
 <br />
 
