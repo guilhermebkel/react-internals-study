@@ -44,6 +44,10 @@ export function useState(initial) {
 	return [hook.state, setState]
 }
 
+/**
+ * Since we render text elements other way, we'll tag them with
+ * 'TEXT_ELEMENT' type in order to help rendering it later.
+ */
 function createTextElement(text) {
 	return {
 		type: "TEXT_ELEMENT",
@@ -60,8 +64,8 @@ function createElement(type, props, ...children) {
 		props: {
 			...props,
 			/**
-			 * Since the non object children need to be rendered as text,
-			 * we make a special object with them.
+			 * Since the non object children need to be rendered as text
+			 * element, we make a simple validation here.
 			 */
 			children: children.map((child) =>
 				typeof child === "object" ? child : createTextElement(child)
@@ -72,7 +76,7 @@ function createElement(type, props, ...children) {
 
 /**
  * Once we finishing the rendering process,
- * we'll call this function to commit everything
+ * we'll call this function to commit everything and
  * show all the rendered information on browser
  */
 function commitRoot() {
@@ -82,6 +86,11 @@ function commitRoot() {
 	workInProgressRoot = null
 }
 
+/**
+ * In case the fiber has already rendered a DOM, we'll remove it,
+ * else we'll commit the deletion of his child (in order to make a
+ * recursion to delete all elements of this fiber if needed)
+ */
 function commitDeletion(fiber, DOMParent) {
 	if (fiber.dom) {
 		DOMParent.removeChild(fiber.dom)
@@ -90,23 +99,41 @@ function commitDeletion(fiber, DOMParent) {
 	}
 }
 
+/**
+ * Here we'll commit some work to be done on the given fiber
+ */
 function commitWork(fiber) {
 	if (!fiber) {
 		return
 	}
 
-	let domParentFiber = fiber.parent
+	let DOMParentFiber = fiber.parent
 
-	while (!domParentFiber.dom) {
-		domParentFiber = domParentFiber.parent
+	/**
+	 * In case the current fiber parent has no rendered DOM,
+	 * we try to search for a rendered DOM on its parent.
+	 */
+	while (!DOMParentFiber.dom) {
+		DOMParentFiber = DOMParentFiber.parent
 	}
 
-	const DOMParent = domParentFiber.dom
+	const DOMParent = DOMParentFiber.dom
 
+	/**
+	 * In case the fiber is tagged to be replaced
+	 */
 	if (fiber.effectTag === "PLACEMENT" && fiber.dom != null) {
 		DOMParent.appendChild(fiber.dom)
+
+	/**
+	 * In case the fiber is tagged to be updated (element does not change, expect for its props)
+	 */
 	} else if (fiber.effectTag === "UPDATE" && fiber.dom != null) {
 		updateDOM(fiber.dom, fiber.alternate.props, fiber.props)
+
+	/**
+	 * In case the fiber is tagged to be deleted
+	 */
 	} else if (fiber.effectTag === "DELETION") {
 		commitDeletion(fiber, DOMParent)
 	}
@@ -115,6 +142,10 @@ function commitWork(fiber) {
 	commitWork(fiber.sibling)
 }
 
+/**
+ * In case we're dealing with a function component, we give a special
+ * treatment to its hooks and the way we properly get the children
+ */
 function updateFunctionComponent(fiber) {
 	workInProgressFiber = fiber
 	hookIndex = 0
@@ -125,6 +156,9 @@ function updateFunctionComponent(fiber) {
 	reconcileChildren(fiber, children)
 }
 
+/**
+ * In case we're dealing with a simple JSX (<div></div>)
+ */
 function updateHostComponent(fiber) {
 	if (!fiber.dom) {
 		fiber.dom = createDOM(fiber)
@@ -212,7 +246,7 @@ function reconcileChildren(workInProgressFiber, elements) {
 }
 
 /**
- * In order to improve performance and avoid blocking all content viewing
+ * In order to improve performance and avoid blocking all content viewing (for a long time)
  * if rendering a great amount of code, we'll add a work loop with
  * help of "window.requestIdleCallback" that will perform the render
  * everytime the browser is idle. By using that, we'll perform the
@@ -234,11 +268,6 @@ function workLoop(deadline) {
 }
 
 function render(element, container) {
-	/**
-	 * When the 'Recast' module is called we'll start rendering the element
-	 * when 'nextUnitOfWork' variable gets a not null content. So when we add
-	 * this info to this variable, we basically tell to browser to start rendering.
-	 */
 	workInProgressRoot = {
 		dom: container,
 		props: {
@@ -249,6 +278,11 @@ function render(element, container) {
 
 	deletions = []
 
+	/**
+	 * When the 'Recast' module is called we'll start rendering the element
+	 * when 'nextUnitOfWork' variable gets a not null content. So when we add
+	 * this info to this variable, we basically tell to browser to start rendering.
+	 */
 	nextUnitOfWork = workInProgressRoot
 }
 
