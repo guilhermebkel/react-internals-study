@@ -1,4 +1,4 @@
-# react-rewritten
+# react-internals-study
 :atom_symbol: A deep study about the React Framework internals based on rewriting it by hand
 
 ## 🌆 How React works
